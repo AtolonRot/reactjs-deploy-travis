@@ -1,0 +1,20 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t atolonrot-webapp-test -f Dockerfile.test .
+
+script: 
+  - docker run -e CI=true atolonrot-webapp-test
+
+before_deploy:
+  - docker build -t atolonrot-webapp .
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
